@@ -1,8 +1,105 @@
+<?php
+	require_once('config.php');
+
+	if(isset($_POST['st_submit'])){
+		$st_name = $_POST['st_name'];
+		$st_email = $_POST['st_email'];
+		$st_mobile = $_POST['st_mobile'];
+		$st_father_name = $_POST['st_father'];
+		$st_father_mobile = $_POST['st_father_mobile'];
+		$st_mother_name = $_POST['st_mother'];
+		$st_gender = $_POST['st_gender'];
+		$st_birthday = $_POST['st_birthday'];
+		$st_address = $_POST['st_address'];
+		$st_password = $_POST['st_password'];
+		// Count Mobile and Email 
+		$countMobile = stRowCount('mobile',$st_mobile);
+		$countEmail = stRowCount('email',$st_email);
+
+		if(empty($st_name)){
+			$error = 'Name is Required!';
+		}
+		else if(empty($st_email)){
+			$error = 'Email is Required!';
+		}
+		else if(!filter_var($st_email,FILTER_VALIDATE_EMAIL)){
+			$error = 'Email not valid!';
+		}
+		else if($countEmail != 0){
+			$error = 'Email Already Used, Try Another Email! ';
+		}
+		else if(empty($st_mobile)){
+			$error = 'Mobile is Required!';
+		}
+		else if(strlen($st_mobile) !=11){
+			$error = 'Mobile Must be 11 Digit!';
+		}
+		else if(!is_numeric($st_mobile)){
+			$error = 'Mobile Must be Number!';
+		}
+		else if(empty($st_father_name)){
+			$error = 'Father Name is Required !';
+		}
+		else if(empty($st_father_mobile)){
+			$error = 'Father Mobile is Required!';
+		}
+		else if(strlen($st_father_mobile) !=11){
+			$error = 'Father Mobile Must be 11 Digit!';
+		}
+		else if(!is_numeric($st_father_mobile)){
+			$error = 'Father Mobile Must be Number!';
+		}
+		else if(empty($st_address)){
+			$error = "Adrress is Required!";
+		}
+		else if(empty($st_password)){
+			$error = "password is Required!";
+		}
+		else if (strlen($st_password) < 6){
+			$error = 'Password Must be more than or equal 6 digit!'; 
+		}
+		else{
+			$registration_date = date ('Y-m-d h:i:s');
+			$st_password = SHA1($st_password);
+			$insert =$pdo->prepare('INSERT INTO students(
+				name,
+				email,
+				mobile,
+				father_name,
+				father_mobile,
+				mother_name,
+				gender,
+				birthday,
+				address,
+				password,
+				registration_date) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
+				$insertStatus = $insert->execute(array(
+					$st_name,
+					$st_email,
+					$st_mobile,
+					$st_father_name,
+					$st_father_mobile,
+					$st_mother_name,
+					$st_gender,
+					$st_birthday,
+					$st_address,
+					$st_password,
+					$registration_date
+				));
+				if($insertStatus == true){
+					$success = 'Your Registration Successfully!';
+				}
+				else{
+					$error = 'Registration failed!';
+				}
+		}
+	}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 	<!-- META ============================================= -->
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -62,6 +159,19 @@
 					<p>Login Your Account <a href="login.php">Click here</a></p>
 				</div>	
 				<form class="contact-bx" method="POST" action="">
+
+					<?php if(isset($error)):?>
+					<div class="alert alert-danger">
+						<?php echo $error;?>
+					</div>
+					<?php endif;?>
+
+					<?php if(isset($success)):?>
+					<div class="alert alert-success">
+						<?php echo $success;?>
+					</div>
+					<?php endif;?>
+
 					<div class="row placeani">
 						<div class="col-lg-12">
 							<div class="form-group">
@@ -113,13 +223,14 @@
 							</div>
 						</div> 
 						<div class="col-lg-12">
-							<div class="form-group">
-									<label>Gender</label>
-									<br>
-									<label for="male"><input id="male" name="st_gender" value="male" type="radio"> male</label>
-									<label for="female"><input id="female" name="st_gender" value="female" type="radio"> female</label>
-							 </div>
-						</div> 
+							<div class="form-group"> 
+								<label>Gender:</label>
+								<br>
+								<label><input type="radio" value="Male" name="st_gender" checked> Male</label>  &nbsp;&nbsp;
+								<label><input type="radio"  value="Female"  name="st_gender"> Female</label>  
+							</div>
+						</div>
+ 
 
 						<div class="col-lg-12">
 							<div class="form-group">
