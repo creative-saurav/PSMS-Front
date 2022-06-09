@@ -154,9 +154,8 @@ if(isset($_SESSION['st_loggedin'])){
 <script src="assets/vendors/masonry/masonry.js"></script>
 <script src="assets/vendors/masonry/filter.js"></script>
 <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
-<script src="assets/js/functions.js"></script>
+<script src="assets/js/main.js"></script>
 <script src="assets/js/contact.js"></script>
-<script src='assets/vendors/switcher/switcher.js'></script>
 </body>
 
 </html>
