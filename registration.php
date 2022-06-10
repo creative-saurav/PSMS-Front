@@ -88,6 +88,7 @@
 				));
 				if($insertStatus == true){
 					$success = 'Your Registration Successfully!';
+					header('location:dashboard/index.php');
 				}
 				else{
 					$error = 'Registration failed!';
