@@ -1,8 +1,12 @@
 <?php 
     require_once('../config.php');
     session_start();
-    if(!isset($_SESSION['st_loggedin'])){
-        header('location:../login.php');
+
+	$email_status = Student('is_email_verified',$_SESSION['st_loggedin'][0]['id']);
+    $mobile_status = Student('is_mobile_verified',$_SESSION['st_loggedin'][0]['id']);
+
+    if(!isset($_SESSION['st_loggedin'])OR $email_status !=1 OR $mobile_status != 1){
+        header('location:logout.php');
     }
 
 ?>
@@ -74,7 +78,7 @@
 			<!--logo start -->
 			<div class="ttr-logo-box">
 				<div>
-					<a href="index.html" class="ttr-logo">
+					<a href="index.php" class="ttr-logo">
 						<img class="ttr-logo-mobile" alt="" src="assets/images/logo-mobile.png" width="30" height="30">
 						<img class="ttr-logo-desktop" alt="" src="assets/images/logo-white1.png" width="160" height="27">
 					</a>
@@ -258,7 +262,7 @@
 			<nav class="ttr-sidebar-navi">
 				<ul>
 					<li>
-						<a href="index.html" class="ttr-material-button">
+						<a href="index.php" class="ttr-material-button">
 							<span class="ttr-icon"><i class="ti-home"></i></span>
 		                	<span class="ttr-label">Dashborad</span>
 		                </a>
