@@ -2,8 +2,6 @@
 	require_once('header.php');
 
 ?>
-
-
 	<!--Main container start -->
 	<main class="ttr-wrapper">
 		<div class="container-fluid">
