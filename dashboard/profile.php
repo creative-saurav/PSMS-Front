@@ -3,10 +3,10 @@
 ?>
 <?php 
     
-        $user_Id = $_SESSION['st_loggedin'][0]["id"]; 
+        $user_id = $_SESSION['st_loggedin'][0]["id"]; 
 
         $stm=$pdo->prepare("SELECT * FROM students WHERE id=?");
-        $stm->execute(array($user_Id));
+        $stm->execute(array($user_id));
         $result = $stm->fetchAll(PDO::FETCH_ASSOC);
 
         $name=$result[0]["name"];
@@ -23,6 +23,7 @@
         $roll=$result[0]["roll"];
         $current_class=$result[0]["current_class"];
         $regi_date=$result[0]["registration_date"];
+        $photo=$result[0]["profile"];
 
 
 
@@ -101,6 +102,16 @@
                                 <tr>
                                     <td><b>Registration Date:</b></td>
                                     <td><?php echo $regi_date ;?></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Profile:</b></td>
+                                    <td>
+                                    <?php if($photo != null) :?>
+                                    <img style=" height:100px;width:auto;" src="<?php echo $photo;?>"></span></a>
+                                    <?php else :?>
+                                    <img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+                                    <?php endif;?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><a href="edit-profile.php" class="btn btn-warning">Edit Profile</a></td>

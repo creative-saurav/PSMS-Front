@@ -9,6 +9,9 @@
         header('location:logout.php');
     }
 
+	$photo = Student('profile',$_SESSION['st_loggedin'][0]['id']);
+	echo $photo;
+
 ?>
 
 <!DOCTYPE html>
@@ -186,12 +189,16 @@
 						</div>
 					</li>
 					<li>
-						<a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+						<a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar">
+							<?php if($photo != null) :?>
+							<img style="object-fit:cover; height:100%;width:100%;" src="<?php echo $photo;?>"></span></a>
+							<?php else :?>
+							<img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+							<?php endif;?>
 						<div class="ttr-header-submenu">
 							<ul>
-								<li><a href="user-profile.html">My profile</a></li>
-								<li><a href="list-view-calendar.html">Activity</a></li>
-								<li><a href="mailbox.html">Messages</a></li>
+								<li><a href="profile.php">Profile</a></li>
+								<li><a href="change-password.php">Change password</a></li>
 								<li><a href="logout.php">Logout</a></li>
 							</ul>
 						</div>
@@ -250,7 +257,7 @@
 		<div class="ttr-sidebar-wrapper content-scroll">
 			<!-- side menu logo start -->
 			<div class="ttr-sidebar-logo">
-				<a href="#"><img alt="" src="assets/images/logo1.png" width="122" height="27"></a>
+				<a href="index.php"><img alt="" src="assets/images/logo1.png" width="122" height="27"></a>
 				<!-- <div class="ttr-sidebar-pin-button" title="Pin/Unpin Menu">
 					<i class="material-icons ttr-fixed-icon">gps_fixed</i>
 					<i class="material-icons ttr-not-fixed-icon">gps_not_fixed</i>
