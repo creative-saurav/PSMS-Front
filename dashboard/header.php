@@ -282,6 +282,18 @@
 		                	<span class="ttr-label">Class</span>
 		                </a>
 		            </li>
+					<li>
+						<a href="class-routine.php" class="ttr-material-button">
+							<span class="ttr-icon"><i class="ti-book"></i></span>
+		                	<span class="ttr-label">Class Routine</span>
+		                </a>
+		            </li>
+					<li>
+						<a href="attendance.php" class="ttr-material-button">
+							<span class="ttr-icon"><i class="ti-book"></i></span>
+		                	<span class="ttr-label">Attendance</span>
+		                </a>
+		            </li>
 		            <li class="ttr-seperate"></li>
 					<li>
 						<a href="profile.php" class="ttr-material-button">
