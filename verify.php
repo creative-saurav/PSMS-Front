@@ -1,73 +1,77 @@
 <?php 
-
 require_once('config.php');
 session_start();
-    if(!isset($_SESSION['st_loggedin'])){
-        header('location:login.php');
-    }
-    $user_id = $_SESSION['st_loggedin'][0]['id'];
+if(!isset($_SESSION['st_loggedin'])){
+	header('location:login.php');
+}
 
-    if(isset($_POST['st_email_send_btn'])){
-        $user_email = Student('email',$user_id);
+$user_id = $_SESSION['st_loggedin'][0]['id'];
 
-        $code = rand(9999,999999);
-        $subject = "PSMS- Email Verification";
 
-        $message = "
-        <html>
-        <head>
-        <title>Email Verification</title>
-        </head>
-        <body>
-        <p><b>Email Verification</b></p>
-        <table>
-        <tr>
-        <th>Code</th>
-        <th>.$code.</th>
-        </tr>
-        </table>
-        <p>Thanks.</p>
-        </body>
-        </html>
-        ";
+if(isset($_POST['st_email_send_btn'])){
+	$user_email = Student('email',$user_id);
 
-        // Always set content-type when sending HTML email
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        // More headers
-        $headers .= 'From: <'.$user_email.'>' . "\r\n";
+	$code = rand(9999,999999);
 
-        $send_mail = mail($user_email,$subject,$message,$headers);
-        if($send_mail == true){
-            $stm = $pdo->prepare("UPDATE students SET email_code=? WHERE id=?");
-            $stm->execute(array($code,$user_id));
+	$subject = "PSMS - Email Verification.";
+	$message = "
+	<html>
+		<head>
+			<title>Email Verification</title>
+		</head>
+		<body>
+			<p><b>Email Verification.</b></p>
+			<table>
+				<tr>
+					<th>Code</th>
+					<th>".$code."</th>
+				</tr>
+			</table>
+			<p>Thanks.</p>
+		</body>
+	</html>
+	";
 
-            $_SESSION['email_code_send']=1;
-            $success ="Code Send Success ,Please check your email!";
-        }
-        else{
-            $error = "Email send falied !";
-        }
+	// Always set content-type when sending HTML email
+	$headers = "MIME-Version: 1.0" . "\r\n";
+	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+	
+	// More headers
+	// $headers .= 'From: <'.$user_email.'>' . "\r\n";
 
-    }
-    // Verify Email Code
-    if(isset($_POST['st_email_verify_btn'])){
-        $st_code = $_POST['st_email_code'];
-        $db_code = Student('email_code',$user_id);
-        if(empty($st_code)){
-            $error = "Email Code is Required!";
-        }
-        else if($st_code != $db_code){
-            $error = "Email Code does't Match!";
-        }
-        else{
-            $stm = $pdo->prepare("UPDATE students SET  email_code=?,is_email_verified=? WHERE id=?");
-            $stm->execute(array(null,1,$user_id));
-            unset($_SESSION['email_code_send']);
-            $success ="Your Email verified Succcess!";
-        }
-    }
+	$send_mail = mail($user_email,$subject,$message,$headers);
 
+	if($send_mail == true){
+		$stm = $pdo->prepare("UPDATE students SET email_code=? WHERE id=?");
+		$stm->execute(array($code,$user_id));
+
+		$_SESSION['email_code_send'] = 1;
+		$success = "Code Send Success, please check your Register Email"; 
+	}
+	else{
+		$error = "Email send Failed!";
+	}
+	
+}
+
+//Verify Email Code
+if(isset($_POST['st_email_verify_btn'])){
+	$st_code = $_POST['st_email_code'];
+	$db_code = Student('email_code',$user_id);
+	if(empty($st_code)){
+		$error = "Email code is Required!";
+	}
+	else if($st_code != $db_code){
+		$error = "Email Code does't Match!";
+	}
+	else{
+		$stm = $pdo->prepare("UPDATE students SET email_code=?,is_email_verified=? WHERE id=?");
+		$stm->execute(array(null,1,$user_id));
+
+		unset($_SESSION['email_code_send']);
+		$success = "Your Email Verify Success!";
+	}
+}
 
 // for Mobile Verification
 
@@ -105,12 +109,6 @@ if(isset($_POST['st_mobile_send_btn'])){
         }
     }
 
-
-// login 
-
-// if(isset($_SESSION['st_loggedin'])){
-// 	header('location:dashboard/index.php');
-// }
 ?>
 
 

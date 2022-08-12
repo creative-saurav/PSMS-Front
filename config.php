@@ -29,6 +29,14 @@
             $count=$stm->rowCount();
             return $count;     
          } 
+        //search result count
+        function ResultCount($id,$class_id){
+            global $pdo;
+            $stm= $pdo->prepare("SELECT id FROM students_results WHERE st_id=? AND class_id=?");
+            $stm->execute(array($id,$class_id));
+            $count=$stm->rowCount();
+            return $count;     
+         } 
         //  Student Data Count 
         function Student($col,$id){
             global $pdo;
@@ -37,6 +45,15 @@
             $results = $stm->fetchAll(PDO::FETCH_ASSOC);
             return $results[0][$col];
         }
+
+        function StudentFromMobile($col,$mobile){
+            global $pdo;
+            $stm=$pdo->prepare("SELECT $col FROM students WHERE mobile=?");
+            $stm->execute(array($mobile));
+            $results = $stm->fetchAll(PDO::FETCH_ASSOC);
+            return $results[0][$col];
+        }
+
          // // Get Subject Name and Code
          function getSubjectName($id){
             global $pdo;

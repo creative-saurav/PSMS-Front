@@ -1,4 +1,5 @@
 <?php
+    require_once('config.php');
 	session_start();
 ?>
 
@@ -59,7 +60,7 @@
 </head>
 <body id="bg">
 <div class="page-wraper">
-<div id="loading-icon-bx"></div>
+<!-- <div id="loading-icon-bx"></div> -->
 	<!-- Header Top ==== -->
     <header class="header rs-nav">
 		<div class="top-bar">

@@ -1,6 +1,5 @@
 <?php
 	require_once('config.php');
-
 	if(isset($_POST['st_submit'])){
 		$st_name = $_POST['st_name'];
 		$st_email = $_POST['st_email'];

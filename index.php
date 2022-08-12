@@ -1,6 +1,37 @@
 <?php 
 require_once('header.php');
 
+if(isset($_POST['search_btn'])){
+	$class_id = $_POST['st_class'];
+	$st_mobile = $_POST['st_mobile'];
+
+	// Student Count
+	$st_count = stRowcount('mobile',$st_mobile);
+
+	if(empty($class_id)){
+		$error = "Class is Required!";
+	}
+	else if(empty($st_mobile)){
+		$error = "Mobile is Required!";
+	}
+	else if($st_count != 1){
+		$error = "Student not found!";
+	}
+	else{
+		$st_id = StudentFromMobile('id',$st_mobile);
+		$result_count = ResultCount($st_id,$class_id);  
+		if($result_count == 1){
+
+			$stm = $pdo->prepare("SELECT * FROM students_results WHERE st_id=? AND class_id=?");
+			$stm ->execute(array($st_id,$class_id));
+			$result = $stm->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else {
+			$error = "Student Result not found!";
+		}
+	}
+}
+
 ?>
     <!-- Content -->
     <div class="page-content bg-white">
@@ -9,18 +40,72 @@ require_once('header.php');
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12 text-center text-white">
-							<h2>Online Courses To Learn</h2>
-							<h5>Own Your Feature Learning New Skills Online</h5>
-							<form class="cours-search">
-								<div class="input-group">
-									<input type="text" class="form-control" placeholder="What do you want to learn today?	">
+							<h2>Search Your Result</h2>
+							<form class="cours-search" action="" method="POST">
+								<div class="input-group ">
+									<select name="st_class" id="" class="input-design" >
+										<option value="">Select Class</option>
+
+										<?php
+							  			$stm = $pdo->prepare("SELECT id,class_name FROM class ORDER BY class_name ASC");
+										$stm->execute();
+										$i=1; 
+										$a=0;
+										$classList=$stm->fetchAll(PDO::FETCH_ASSOC);
+
+										foreach($classList as $list) :?>
+											<option value="<?php echo $list['id'];?>"><?php echo $list['class_name'];?></option>
+									  <?php endforeach;?>	
+
+									</select>
+									<input type="text" name="st_mobile" class="form-control" placeholder="Student Mobile Number">
 									<div class="input-group-append">
-										<button class="btn" type="submit">Search</button> 
+										<button class="btn" name="search_btn" type="submit">Search</button> 
 									</div>
 								</div>
 							</form>
+
+							<?php if(isset($error)):?>	
+								<div class="alert alert-danger"><?php echo $error; ?></div>
+							<?php endif; ?>	
+
 						</div>
 					</div>
+						<?php if(isset($result)):?>		
+						<div class="mw800 m-auto">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="cours-search-bx m-b30">
+
+									   <table class="table  table-bordered">
+										<tr>
+											<td>Name:</td>
+											<td><?php echo Student('name',$result[0]['st_id']);?></td>
+										</tr> 
+										<tr>
+											<td>Position:</td>
+											<td><?php echo $result[0]['position'];?></td>
+										</tr> 
+										
+										 <?php 
+										  $subList = json_decode($result[0]['subjects'],true);
+										  foreach($subList as $new_sub_list): ?>	
+										  <tr>
+											<td><?php echo $new_sub_list['subject_name'];?></td>
+											<td><?php echo $new_sub_list['subject_marks'] ;?></td>
+										  </tr>
+										  <?php endforeach;?>
+										  <tr>
+											<td>Total Marks:</td>
+											<td><?php echo $result[0]['total_marks'];?></td>
+										</tr> 
+									   </table>
+
+									</div>			
+								</div>			
+							</div>			
+					   </div>			
+						<?php endif;?>					
 					<div class="mw800 m-auto">
 						<div class="row">
 							<div class="col-md-4 col-sm-6">
